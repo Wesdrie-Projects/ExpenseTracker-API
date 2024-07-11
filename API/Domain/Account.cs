@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace API.Domain;
 
@@ -9,7 +8,6 @@ public class Account
 {
     public Guid Id { get; private set; }
     public IdentityUser User { get; private set; } = null!;
-    public Guid UserId { get; private set; }
     public string Name { get; private set; } = null!;
 
     public ICollection<Transaction> Transactions { get; private set; } = new HashSet<Transaction>();

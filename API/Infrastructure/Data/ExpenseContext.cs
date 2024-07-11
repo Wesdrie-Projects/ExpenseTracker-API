@@ -1,4 +1,5 @@
 ﻿using API.Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -8,6 +9,7 @@ public class ExpenseContext : DbContext
 {
     public ExpenseContext(DbContextOptions<ExpenseContext> options) : base(options) { }
 
+    public DbSet<IdentityUser> Users => Set<IdentityUser>();
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Transaction> Transactions => Set<Transaction>();
