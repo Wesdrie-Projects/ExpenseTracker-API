@@ -2,19 +2,22 @@
 
 namespace API.Infrastructure.Data;
 
-public static class AccountSeeder
+public class AccountSeeder
 {
-    public static async Task SeedAsync(ExpenseContext context)
+    public Account Debit { get; set; } = null!;
+    public Account Credit { get; set; } = null!;
+
+    public AccountSeeder(UserSeeder userSeeder)
     {
-            var users = context.Users.ToList();
+        Debit = new(userSeeder.John,
+            "Debit");
+        Credit = new(userSeeder.John,
+            "Credit");
+    }
 
-            var accounts = new List<Account>
-            {
-                new(users[0], "Debit Account"),
-                new(users[0], "Credit Account")
-            };
-
-            await context.Accounts.AddRangeAsync(accounts);
-            await context.SaveChangesAsync();
+    public void Seed(ExpenseContext context)
+    {
+        context.Accounts.Add(Debit);
+        context.Accounts.Add(Credit);
     }
 }

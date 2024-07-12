@@ -2,24 +2,29 @@
 
 namespace API.Infrastructure.Data;
 
-public static class UserSeeder
+public class UserSeeder
 {
-    public static async Task SeedAsync(UserManager<IdentityUser> userManager)
-    {
-        var email = "user@example.com";
+    private readonly UserManager<IdentityUser> _userManager;
 
-        var user = new IdentityUser
+    public IdentityUser John { get; set; } = null!;
+
+    public UserSeeder(UserManager<IdentityUser> userManager)
+    {
+        _userManager = userManager;
+
+        John = new()
         {
-            UserName = email,
-            Email = email,
+            UserName = "john@example.com",
+            Email = "john@example.com",
             EmailConfirmed = true
         };
+    }
 
-        var password = "password";
+    public async Task SeedAsync()
+    {
+        var createUser = await _userManager.CreateAsync(John, "!Password1");
 
-        var result = await userManager.CreateAsync(user, password);
-
-        if (!result.Succeeded)
-            throw new Exception("Unable to seed user.");
+        if (createUser.Succeeded)
+            throw new Exception("Cannot create user.");
     }
 }

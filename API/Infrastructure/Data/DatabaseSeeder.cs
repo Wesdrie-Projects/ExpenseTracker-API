@@ -13,13 +13,20 @@ public class DatabaseSeeder
         _userManager = userManager;
     }
 
-    public async Task SeedData()
+    public async Task SeedDataAsync()
     {
-        if (_context.Transactions.Any())
-            return;
+        var userSeeder = new UserSeeder(_userManager);
+        await userSeeder.SeedAsync();
 
-        await UserSeeder.SeedAsync(_userManager);
-        await AccountSeeder.SeedAsync(_context);
-        await CategorySeeder.SeedAsync(_context);
+        var accountSeeder = new AccountSeeder(userSeeder);
+        accountSeeder.Seed(_context);
+
+        var categorySeeder = new CategorySeeder();
+        categorySeeder.Seed(_context);
+
+        var transactionSeeder = new TransactionSeeder(accountSeeder, categorySeeder);
+        transactionSeeder.Seed(_context);
+
+        await _context.SaveChangesAsync();
     }
 }
