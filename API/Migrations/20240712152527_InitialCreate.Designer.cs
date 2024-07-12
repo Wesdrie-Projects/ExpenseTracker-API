@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Migrations
 {
     [DbContext(typeof(ExpenseContext))]
-    [Migration("20240712144546_InitialCreate")]
+    [Migration("20240712152527_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -87,11 +87,15 @@ namespace API.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("AccountId", "CategoryId", "Date", "Amount")
+                    b.HasIndex("AccountId", "CategoryId", "Description", "Date", "Amount")
                         .IsUnique();
 
                     b.ToTable("Transactions");

@@ -81,6 +81,7 @@ namespace API.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     AccountId = table.Column<Guid>(type: "uuid", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false)
                 },
@@ -114,9 +115,9 @@ namespace API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_AccountId_CategoryId_Date_Amount",
+                name: "IX_Transactions_AccountId_CategoryId_Description_Date_Amount",
                 table: "Transactions",
-                columns: new[] { "AccountId", "CategoryId", "Date", "Amount" },
+                columns: new[] { "AccountId", "CategoryId", "Description", "Date", "Amount" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

@@ -84,11 +84,15 @@ namespace API.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("AccountId", "CategoryId", "Date", "Amount")
+                    b.HasIndex("AccountId", "CategoryId", "Description", "Date", "Amount")
                         .IsUnique();
 
                     b.ToTable("Transactions");
