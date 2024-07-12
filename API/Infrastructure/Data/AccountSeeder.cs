@@ -1,4 +1,4 @@
-﻿using API.Domain;
+﻿using API.Features.Accounts;
 
 namespace API.Infrastructure.Data;
 

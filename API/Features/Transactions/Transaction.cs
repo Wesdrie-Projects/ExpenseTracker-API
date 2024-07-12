@@ -1,4 +1,7 @@
-﻿namespace API.Domain;
+﻿using API.Features.Accounts;
+using API.Features.Categories;
+
+namespace API.Features.Transactions;
 
 public class Transaction
 {

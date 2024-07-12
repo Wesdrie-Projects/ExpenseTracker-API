@@ -1,4 +1,4 @@
-﻿using API.Domain;
+﻿using API.Features.Categories;
 
 namespace API.Infrastructure.Data;
 

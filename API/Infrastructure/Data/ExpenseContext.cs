@@ -1,4 +1,6 @@
-﻿using API.Domain;
+﻿using API.Features.Accounts;
+using API.Features.Categories;
+using API.Features.Transactions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
