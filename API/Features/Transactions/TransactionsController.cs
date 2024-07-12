@@ -2,12 +2,13 @@
 using API.Features.Categories;
 using API.Infrastructure.Controller;
 using API.Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Features.Transactions;
 
+[AllowAnonymous]
 public class TransactionsController : ExpenseBaseController
 {
     public TransactionsController(ExpenseContext context) : base(context) { }

@@ -1,4 +1,5 @@
 using API.Infrastructure.Data;
+using API.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,12 +9,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ExpenseContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddDefaultTokenProviders()
-    .AddEntityFrameworkStores<ExpenseContext>();
+builder.RegisterPostgres();
+builder.RegisterIdentityUserAndRole();
+// Still Need To Implement JWT Sign-In & Auth
+builder.RegisterJwtAuthentication();
 
 var app = builder.Build();
 

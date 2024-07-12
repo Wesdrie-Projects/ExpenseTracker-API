@@ -1,11 +1,13 @@
 ﻿using API.Infrastructure.Controller;
 using API.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Features.Accounts;
 
+[AllowAnonymous]
 public class AccountsController : ExpenseBaseController
 {
     public AccountsController(ExpenseContext context) : base(context) { }
