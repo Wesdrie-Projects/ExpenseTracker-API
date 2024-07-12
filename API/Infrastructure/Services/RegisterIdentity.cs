@@ -8,7 +8,7 @@ namespace API.Infrastructure.Services;
 
 public static class RegisterIdentity
 {
-    public static void RegisterIdentityUserAndRole(this WebApplicationBuilder builder)
+    public static void RegisterIdentityUserAndIdentityRole(this WebApplicationBuilder builder)
     {
         builder.Services.AddIdentity<IdentityUser, IdentityRole>()
             .AddEntityFrameworkStores<ExpenseContext>();
@@ -16,24 +16,25 @@ public static class RegisterIdentity
 
     public static void RegisterJwtAuthentication(this WebApplicationBuilder builder)
     {
-        builder.Services.AddAuthentication(options =>
+        var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
+        builder.Services.AddAuthentication(x =>
+        {
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(x =>
+        {
+            x.RequireHttpsMetadata = false;
+            x.SaveToken = true;
+            x.TokenValidationParameters = new TokenValidationParameters
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = "https://localhost:7285/",
-                    ValidAudience = "local-dev",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Ecx8yjzg1I7BmkJnW3+fbKvZT6pFV+2Uc5RqM+1zBF0a"))
-                };
-            });
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+            };
+        });
     }
 }

@@ -1,25 +1,25 @@
 ﻿using API.Infrastructure.Controller;
 using API.Infrastructure.Data;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace API.Features.Accounts;
 
-[AllowAnonymous]
 public class AccountsController : ExpenseBaseController
 {
     public AccountsController(ExpenseContext context) : base(context) { }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(Guid userId, CreateAccountRequest request)
+    public async Task<IActionResult> CreateAsync(CreateAccountRequest request)
     {
-        IdentityUser user = await _context.Users.FindAsync(userId)
+        var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+            ?? throw new Exception("Unable To Get User Information");
+
+        var user = await _context.Users.FindAsync(userId)
             ?? throw new Exception($"User Not Found: {userId}");
 
-        Account account = new(user,
-            request.Name);
+        Account account = new(user, request.Name);
 
         _context.Accounts.Add(account);
         await _context.SaveChangesAsync();
@@ -28,9 +28,12 @@ public class AccountsController : ExpenseBaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> ReadyAsync(Guid userId)
+    public async Task<IActionResult> ReadyAsync()
     {
-        IdentityUser user = await _context.Users.FindAsync(userId)
+        var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+            ?? throw new Exception("Unable To Get User Information");
+
+        var user = await _context.Users.FindAsync(userId)
             ?? throw new Exception($"User Not Found: {userId}");
 
         var accounts = await _context.Accounts
@@ -52,7 +55,7 @@ public class AccountsController : ExpenseBaseController
     [HttpDelete]
     public async Task<IActionResult> DeleteAsync(Guid accountId)
     {
-        Account account = await _context.Accounts.FindAsync(accountId)
+        var account = await _context.Accounts.FindAsync(accountId)
             ?? throw new Exception($"Account Not Found: {accountId}");
 
         _context.Accounts.Remove(account);

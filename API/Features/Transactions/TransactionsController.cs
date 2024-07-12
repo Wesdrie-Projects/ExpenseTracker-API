@@ -1,14 +1,10 @@
-﻿using API.Features.Accounts;
-using API.Features.Categories;
-using API.Infrastructure.Controller;
+﻿using API.Infrastructure.Controller;
 using API.Infrastructure.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Features.Transactions;
 
-[AllowAnonymous]
 public class TransactionsController : ExpenseBaseController
 {
     public TransactionsController(ExpenseContext context) : base(context) { }
@@ -16,10 +12,10 @@ public class TransactionsController : ExpenseBaseController
     [HttpPost]
     public async Task<IActionResult> CreateAsync(Guid accountId, Guid categoryId, CreateTransactionRequest request)
     {
-        Account account = await _context.Accounts.FindAsync(accountId)
+        var account = await _context.Accounts.FindAsync(accountId)
             ?? throw new Exception($"Account Not Found: {accountId}");
 
-        Category category = await _context.Categories.FindAsync(categoryId)
+        var category = await _context.Categories.FindAsync(categoryId)
             ?? throw new Exception($"Category Not Found: {accountId}");
 
         Transaction transaction = new(account,
@@ -37,7 +33,7 @@ public class TransactionsController : ExpenseBaseController
     [HttpGet]
     public async Task<IActionResult> ReadyAsync(Guid accountId)
     {
-        Account account = await _context.Accounts.FindAsync(accountId)
+        var account = await _context.Accounts.FindAsync(accountId)
             ?? throw new Exception($"Account Not Found: {accountId}");
 
         var transactions = await _context.Transactions
@@ -60,7 +56,7 @@ public class TransactionsController : ExpenseBaseController
     [HttpDelete]
     public async Task<IActionResult> DeleteAsync(Guid transactionId)
     {
-        Transaction transaction = await _context.Transactions.FindAsync(transactionId)
+        var transaction = await _context.Transactions.FindAsync(transactionId)
             ?? throw new Exception($"Transaction Not Found: {transactionId}");
 
         _context.Transactions.Remove(transaction);

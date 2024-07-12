@@ -10,9 +10,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.RegisterPostgres();
-builder.RegisterIdentityUserAndRole();
-// Still Need To Implement JWT Sign-In & Auth
+builder.RegisterIdentityUserAndIdentityRole();
 builder.RegisterJwtAuthentication();
+builder.RegisterSwaggerBarerToken();
 
 var app = builder.Build();
 
@@ -23,11 +23,12 @@ if (app.Environment.IsDevelopment())
         var services = scope.ServiceProvider;
         var context = services.GetRequiredService<ExpenseContext>();
         var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
         context.Database.Migrate();
         context.Database.EnsureCreated();
 
-        var databaseSeeder = new DatabaseSeeder(context, userManager);
+        var databaseSeeder = new DatabaseSeeder(context, userManager, roleManager);
         await databaseSeeder.SeedDataAsync();
     }
 

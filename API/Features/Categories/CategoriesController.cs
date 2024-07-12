@@ -1,25 +1,25 @@
 ﻿using API.Infrastructure.Controller;
 using API.Infrastructure.Data;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace API.Features.Categories;
 
-[AllowAnonymous]
 public class CategoriesController : ExpenseBaseController
 {
     public CategoriesController(ExpenseContext context) : base(context) { }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(Guid userId, CreateCategoryRequest request)
+    public async Task<IActionResult> CreateAsync(CreateCategoryRequest request)
     {
-        IdentityUser user = await _context.Users.FindAsync(userId)
+        var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+            ?? throw new Exception("Unable To Get User Information");
+
+        var user = await _context.Users.FindAsync(userId)
             ?? throw new Exception($"User Not Found: {userId}");
 
-        Category category = new(user,
-            request.Name);
+        Category category = new(user, request.Name);
 
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
@@ -28,9 +28,12 @@ public class CategoriesController : ExpenseBaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> ReadyAsync(Guid userId)
+    public async Task<IActionResult> ReadyAsync()
     {
-        IdentityUser user = await _context.Users.FindAsync(userId)
+        var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+            ?? throw new Exception("Unable To Get User Information");
+
+        var user = await _context.Users.FindAsync(userId)
             ?? throw new Exception($"User Not Found: {userId}");
 
         var categories = await _context.Categories
@@ -49,7 +52,7 @@ public class CategoriesController : ExpenseBaseController
     [HttpDelete]
     public async Task<IActionResult> DeleteAsync(Guid categoryId)
     {
-        Category category = await _context.Categories.FindAsync(categoryId)
+        var category = await _context.Categories.FindAsync(categoryId)
             ?? throw new Exception($"Category Not Found: {categoryId}");
 
         _context.Categories.Remove(category);
