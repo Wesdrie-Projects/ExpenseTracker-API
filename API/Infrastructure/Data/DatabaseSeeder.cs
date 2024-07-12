@@ -21,7 +21,7 @@ public class DatabaseSeeder
         var accountSeeder = new AccountSeeder(userSeeder);
         accountSeeder.Seed(_context);
 
-        var categorySeeder = new CategorySeeder();
+        var categorySeeder = new CategorySeeder(userSeeder);
         categorySeeder.Seed(_context);
 
         var transactionSeeder = new TransactionSeeder(accountSeeder, categorySeeder);

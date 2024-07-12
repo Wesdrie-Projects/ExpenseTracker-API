@@ -22,9 +22,13 @@ public class UserSeeder
 
     public async Task SeedAsync()
     {
-        var createUser = await _userManager.CreateAsync(John, "!Password1");
-
-        if (createUser.Succeeded)
-            throw new Exception("Cannot create user.");
+        try
+        {
+            var createUser = await _userManager.CreateAsync(John, "!Password1");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Cannot Create User: {ex.Message}");
+        }
     }
 }

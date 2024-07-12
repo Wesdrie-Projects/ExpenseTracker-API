@@ -14,22 +14,27 @@ public class TransactionSeeder
     {
         Salary = new(accountSeeder.Debit,
             categorySeeder.Income,
+            "Work Salary",
             DateOnly.FromDateTime(DateTime.Now.AddDays(-25)),
             61056.25m);
         SavingsInterest = new(accountSeeder.Debit,
             categorySeeder.Interest,
+            "Stock Investment Savings",
             DateOnly.FromDateTime(DateTime.Now.AddDays(-23)),
             137.56m);
         CreditInterest = new(accountSeeder.Credit,
             categorySeeder.Debt,
+            "Gold Card",
             DateOnly.FromDateTime(DateTime.Now.AddDays(-23)),
             -99.41m);
         Medical = new(accountSeeder.Debit,
             categorySeeder.Bills,
+            "First Aid Medical",
             DateOnly.FromDateTime(DateTime.Now.AddDays(-21)),
             -1299.89m);
         CarPayment = new(accountSeeder.Debit,
             categorySeeder.Bills,
+            "New Car Motors Payment",
             DateOnly.FromDateTime(DateTime.Now.AddDays(-20)),
             -3789.45m);
     }

@@ -22,7 +22,7 @@ namespace API.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("API.Domain.Account", b =>
+            modelBuilder.Entity("API.Features.Accounts.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,16 +33,18 @@ namespace API.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "Name")
+                        .IsUnique();
 
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("API.Domain.Category", b =>
+            modelBuilder.Entity("API.Features.Categories.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,12 +54,19 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Name")
+                        .IsUnique();
 
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("API.Domain.Transaction", b =>
+            modelBuilder.Entity("API.Features.Transactions.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,9 +86,10 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
-
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("AccountId", "CategoryId", "Date", "Amount")
+                        .IsUnique();
 
                     b.ToTable("Transactions");
                 });
@@ -136,24 +146,37 @@ namespace API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("API.Domain.Account", b =>
+            modelBuilder.Entity("API.Features.Accounts.Account", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("API.Domain.Transaction", b =>
+            modelBuilder.Entity("API.Features.Categories.Category", b =>
                 {
-                    b.HasOne("API.Domain.Account", "Account")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("API.Features.Transactions.Transaction", b =>
+                {
+                    b.HasOne("API.Features.Accounts.Account", "Account")
                         .WithMany("Transactions")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("API.Domain.Category", "Category")
+                    b.HasOne("API.Features.Categories.Category", "Category")
                         .WithMany("Transactions")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -164,12 +187,12 @@ namespace API.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("API.Domain.Account", b =>
+            modelBuilder.Entity("API.Features.Accounts.Account", b =>
                 {
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("API.Domain.Category", b =>
+            modelBuilder.Entity("API.Features.Categories.Category", b =>
                 {
                     b.Navigation("Transactions");
                 });

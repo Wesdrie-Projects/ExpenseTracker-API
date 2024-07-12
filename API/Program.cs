@@ -25,8 +25,8 @@ if (app.Environment.IsDevelopment())
         var context = services.GetRequiredService<ExpenseContext>();
         var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
-        context.Database.EnsureCreated();
         context.Database.Migrate();
+        context.Database.EnsureCreated();
 
         var databaseSeeder = new DatabaseSeeder(context, userManager);
         await databaseSeeder.SeedDataAsync();

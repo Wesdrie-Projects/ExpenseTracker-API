@@ -13,16 +13,24 @@ public class CategorySeeder
     public Category Transport { get; set; } = null!;
     public Category Unexpected { get; set; } = null!;
 
-    public CategorySeeder()
+    public CategorySeeder(UserSeeder userSeeder)
     {
-        Income = new("Income");
-        Interest = new("Interest");
-        Debt = new("Debt");
-        Bills = new("Bills");
-        Entertainment = new("Entertainment");
-        Groceries = new("Groceries");
-        Transport = new("Transport");
-        Unexpected = new("Unexpected");
+        Income = new(userSeeder.John,
+            "Income");
+        Interest = new(userSeeder.John, 
+            "Interest");
+        Debt = new(userSeeder.John,
+            "Debt");
+        Bills = new(userSeeder.John,
+            "Bills");
+        Entertainment = new(userSeeder.John,
+            "Entertainment");
+        Groceries = new(userSeeder.John,
+            "Groceries");
+        Transport = new(userSeeder.John,
+            "Transport");
+        Unexpected = new(userSeeder.John,
+            "Unexpected");
     }
 
     public void Seed(ExpenseContext context)
