@@ -2,9 +2,9 @@
 
 namespace API.Infrastructure.Services;
 
-public static class RegisterSwagger
+public static class SwaggerServices
 {
-    public static void RegisterSwaggerBarerToken(this WebApplicationBuilder builder)
+    public static void AddBearerTokenForSwagger(this WebApplicationBuilder builder)
     {
         builder.Services.AddSwaggerGen(x =>
         {

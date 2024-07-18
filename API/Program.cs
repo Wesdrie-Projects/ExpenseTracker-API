@@ -1,7 +1,4 @@
-using API.Infrastructure.Data;
 using API.Infrastructure.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,27 +7,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.RegisterPostgres();
-builder.RegisterIdentityUserAndIdentityRole();
-builder.RegisterJwtAuthentication();
-builder.RegisterSwaggerBarerToken();
+builder.RegisterIdentity();
+builder.RegisterJsonWebToken();
+builder.AddBearerTokenForSwagger();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<ExpenseContext>();
-        var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-        context.Database.Migrate();
-        context.Database.EnsureCreated();
-
-        var databaseSeeder = new DatabaseSeeder(context, userManager, roleManager);
-        await databaseSeeder.SeedDataAsync();
-    }
+    await app.SetUpDevelopmentDatabaseAsync();
 
     app.UseSwagger();
     app.UseSwaggerUI();

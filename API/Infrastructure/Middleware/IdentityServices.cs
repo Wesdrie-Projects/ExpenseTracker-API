@@ -6,15 +6,15 @@ using System.Text;
 
 namespace API.Infrastructure.Services;
 
-public static class RegisterIdentity
+public static class IdentityServices
 {
-    public static void RegisterIdentityUserAndIdentityRole(this WebApplicationBuilder builder)
+    public static void RegisterIdentity(this WebApplicationBuilder builder)
     {
         builder.Services.AddIdentity<IdentityUser, IdentityRole>()
             .AddEntityFrameworkStores<ExpenseContext>();
     }
 
-    public static void RegisterJwtAuthentication(this WebApplicationBuilder builder)
+    public static void RegisterJsonWebToken(this WebApplicationBuilder builder)
     {
         var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
         builder.Services.AddAuthentication(x =>
